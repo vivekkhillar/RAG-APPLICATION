@@ -1,0 +1,11 @@
+langchain>=1.0.1 #Core RAG Pipeline
+langchain-community>=0.4.1 #To connect OLLAMA SERVER
+langchain-chroma>=1.0.0 #Chroma DB integration
+chromadb>=1.5.9 #for vector database
+pymupdf>=1.27.2.3 #For text + image extraction
+pillow>=12.3.0 #For image processing
+fastapi>=0.139.0 # For building API
+uvicorn[standard]>=0.27.0 # which provide ASGI and WSGI interface which will hood of your FastAPI application
+python-dotenv>=1.2.2 # To load the enviorment config
+pydantic-settings>=2.14.2 # typed settings from .env
+requests>=2.34.2 # HTTP calls to Ollama for LLaVA
