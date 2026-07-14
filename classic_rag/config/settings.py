@@ -1,7 +1,10 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
+from BASE_DIR.directory import Directory
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Create a Object which will direct call from the Base_dir file and found the path where the code is running
+Directory = Directory()
+BASE_DIR = Directory.dir()
 print (f"Print the Enviorment Base location which also can be hide : {BASE_DIR/'.env'}")
 ENV_FILE= BASE_DIR/ ".env"
 
@@ -30,11 +33,10 @@ class Settings(BaseSettings):
     CHUNK_OVERLAP: int
     RETRIEVER_K: int
     DOCS_PATH: str
-    IMAGES_PATH: str
+    IMAGES_PATH: str    
 
 
 settings = Settings()
-
 
 
 # .env file

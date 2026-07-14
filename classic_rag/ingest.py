@@ -1,8 +1,22 @@
 from ingestion.loader import Load_pdf
 
+class ingest():
 
-def main()  -> None:
+    def __init__(self) -> None:
+        
+        self.doc_load = Load_pdf()
+    
+    def run(self):
 
-    return "hi"
+        self.doc_load.load()
+
+        return "Pipeline Executed Successfully"
+
+        
+
+if __name__ == "__main__":
+    pipeline = ingest()
+    pipeline.run()
+    
 
 

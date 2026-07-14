@@ -11,8 +11,7 @@
 - embedder.py →
 - store.py → retriever.py →
 - prompt.py → chain.py →
-- ingest.py → Work flow handel for ingest flow to store all the details in vector data base
-- main.py →
+- ingest.py → main.py → 
 - Dockerfile → docker-compose.yml →
 - docker compose up → test
 
