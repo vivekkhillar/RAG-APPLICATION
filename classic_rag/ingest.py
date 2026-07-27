@@ -16,7 +16,7 @@ class ingest():
 
 if __name__ == "__main__":
     pipeline = ingest()
-    pipeline.run()
+    print (pipeline.run())
     
 
 

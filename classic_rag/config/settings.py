@@ -5,7 +5,7 @@ from BASE_DIR.directory import Directory
 # Create a Object which will direct call from the Base_dir file and found the path where the code is running
 Directory = Directory()
 BASE_DIR = Directory.dir()
-print (f"Print the Enviorment Base location which also can be hide : {BASE_DIR/'.env'}")
+# print (f"Print the Enviorment Base location which also can be hide : {BASE_DIR/'.env'}")
 ENV_FILE= BASE_DIR/ ".env"
 
 class Settings(BaseSettings):
