@@ -1,6 +1,6 @@
 from csv import reader
 from tkinter import image_types
-import fitz,os
+import fitz,os,json
 from config.settings import settings
 from BASE_DIR.directory import Directory
 
@@ -31,7 +31,9 @@ class Load_pdf():
 
                 # To load images then use get_images()
                 images = page.get_images(full= True)
-                image = []
+                
+                # create a list of page_images 
+                page_images = []
                 
                 for image_index,img in enumerate(images):
                     # print (image_index,img)
@@ -45,28 +47,28 @@ class Load_pdf():
                     
                     # Create a image name from which page
                     image_name = f"page_{page_number}_img_{image_index+1}.{image_ext}"
+
+                    # create a image_path to store the iamges
                     image_unique_path = os.path.join(self.IMAGE_STORE_PATH,image_name)
                     
-                    print(image_unique_path)
-                    print (image_name)
-                    print (f"Image Processed for {image_name}")
-
-
+                    # print(image_unique_path)
+                    # print (image_name)
+                    
                     os.makedirs(self.IMAGE_STORE_PATH,exist_ok=True)
                     
                     with open(image_unique_path,"wb") as f:
                         f.write(image_bytes)
 
-                    # create a image_path to store the iamges
+                    page_images.append(image_unique_path)
+            
+                self.text_image_per_page_details[page_number] = {"Text": text, "Images" : page_images}
 
+            return json.dumps(self.text_image_per_page_details[1],indent=4)
 
-
-                # self.text_image_per_page_details[i] = [text,image]
-
-        # print (self.text_image_per_page_details[146])
 
 
 if __name__ == "__main__":
+    
     pdf_load = Load_pdf()
     result = pdf_load.load()
     print(result)
