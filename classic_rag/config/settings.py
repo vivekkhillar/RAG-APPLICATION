@@ -33,10 +33,14 @@ class Settings(BaseSettings):
     CHUNK_OVERLAP: int
     RETRIEVER_K: int
     DOCS_PATH: str
-    IMAGES_PATH: str    
+    IMAGES_PATH: str
+    LOGS_PATH: str    
+    ENVIORMENT: str
+    LOG_LEVEL: str
+    
 
+# settings = Settings()
 
-settings = Settings()
 
 
 # .env file
