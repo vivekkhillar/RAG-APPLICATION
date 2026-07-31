@@ -1,6 +1,4 @@
 from langchain_core.documents.base import Document
-
-
 from importlib import metadata
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from config.settings import Settings
@@ -29,21 +27,23 @@ class splitter_text:
 
         for i in args:
             
-            if args[i]['Text'] == "":
+            if args[i]["Text"] == "":
                 self.logger.warning(f"Page number {i} is not having any Text to convert into chunks")
                 continue
             
             DOC = Document(
                 metadata = {
                     "source" : self.source,
+                    "type" : "text",
                     "page" : i
                 },
                 page_content = args[i]["Text"]
             )
             
             self.logger.info(f'Length of text for page {i} is : {len(args[i]['Text'])}')
-            # self.logger.info(f'Page {i} having {len(self.splitter_model.split_documents([DOC]))} chunks')
-            chunk_data.append(self.splitter_model.split_documents([DOC]))
+            small_chunk = self.splitter_model.split_documents([DOC])
+            self.logger.info(f'Page {i} having {len(small_chunk)} chunks')
+            chunk_data.append(small_chunk)
 
         return chunk_data
 

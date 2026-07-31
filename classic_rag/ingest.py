@@ -1,4 +1,5 @@
 from typing import Any
+import json
 from ingestion.loader import Load_pdf
 from ingestion.splitter import splitter_text
 from config.logger import logger
@@ -14,16 +15,22 @@ class ingest():
     def run(self):
         
         self.logger.info("Executing the PipeLine Loading the Document")
-        
+
+        # Loading the PDF Document where load Function will return the Text and Image within a map where the page number will be the key 
         loaded_doc = self.doc_load.load()
-        self.logger.info(loaded_doc)
         
+        # After the Map will save in the loaded_doc and sending to the splitter function where all the text will be converted to chunks on the basis of the overlap and chunk size
         chunk_data = self.chunk_per_page.splitter(loaded_doc)
-        
         self.logger.info("Adding the chunk per page to the chunk_Text")
-        for chunk_data in chunk_data:
-            self.logger.info(chunk_data)
+
+        # For debuggin purpose just check if all the chunks were came or not                
+        for chunks in chunk_data:
+            self.logger.debug(chunks)
         
+        # Now the same way the extracted images will send to the easyocr to find out if the image is having any text value or not that will be included into the metadata and store against the page_content
+         
+
+
         return "Pipeline Executed Successfully"
 
         

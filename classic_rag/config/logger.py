@@ -36,7 +36,7 @@ class Logger:
 
     def _add_file_handler(self,formatter):
 
-        handler = logging.FileHandler(self.log_file)
+        handler = logging.FileHandler(self.log_file,encoding="utf-8")
         handler.setFormatter(formatter)
         return handler
 
