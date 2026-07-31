@@ -19,8 +19,10 @@ class ingest():
         self.logger.info(loaded_doc)
         
         chunk_data = self.chunk_per_page.splitter(loaded_doc)
+        
         self.logger.info("Adding the chunk per page to the chunk_Text")
-        self.logger.info(chunk_data)
+        for chunk_data in chunk_data:
+            self.logger.info(chunk_data)
         
         return "Pipeline Executed Successfully"
 
