@@ -71,8 +71,8 @@ class Load_pdf:
                 self.text_image_per_page_details[page_number] = {"Text": text, "Images" : page_images}
 
             self.logger.info('Returning the JSON DUMP which mapped to loaded_doc')
-            return json.dumps(self.text_image_per_page_details,indent=4)
-
+            self.logger.info(json.dumps(self.text_image_per_page_details,indent=4))
+            return self.text_image_per_page_details
 
 if __name__ == "__main__":
     pdf_load = Load_pdf()

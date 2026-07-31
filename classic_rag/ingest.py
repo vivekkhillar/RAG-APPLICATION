@@ -16,10 +16,11 @@ class ingest():
         self.logger.info("Executing the PipeLine Loading the Document")
         
         loaded_doc = self.doc_load.load()
-        # self.logger.info(loaded_doc)
+        self.logger.info(loaded_doc)
         
-        chunk_text = self.chunk_per_page.splitter(loaded_doc)
-        # self.logger.filter
+        chunk_data = self.chunk_per_page.splitter(loaded_doc)
+        self.logger.info("Adding the chunk per page to the chunk_Text")
+        self.logger.info(chunk_data)
         
         return "Pipeline Executed Successfully"
 
