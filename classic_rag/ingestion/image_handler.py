@@ -3,6 +3,8 @@ from shlex import join
 from langchain_core.documents.base import Document
 from importlib import metadata
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage
 from torch._inductor.ir import NoneLayout
 from config.settings import settings
 from BASE_DIR.directory import Directory
@@ -42,7 +44,7 @@ class image_handler:
             then sent back the corrected image to find the text'''
             if confidence < self.ocr_text_confidence_score:
                 confidence_valid = False
-                self.logger.info(f'Low Confidence found for image path {images} reprocessing of this image required')
+                # self.logger.info(f'Low Confidence found for image path {images} reprocessing of this image required')
                 break
 
             text_from_image.append(text)
@@ -128,7 +130,7 @@ class image_handler:
                 return final_text
 
         # Now for confidence if found less than the config then re proccess the image and find the better confidence score by pillow 
-        self.logger.info(f'Initiating the reprocess of the image path {images}')
+        # self.logger.info(f'Initiating the reprocess of the image path {images}')
         
 
         last_processed_text = None
@@ -163,10 +165,14 @@ class image_handler:
                 # self.logger.info(f" For page {i} and {images}, the text captured is {updated_text_from_image}")
                 return last_processed_text
         
-        self.logger.warning(f'All preprocessing levels exhausted for {images}. 'f' Last processed text returned')
+        # self.logger.warning(f'All preprocessing levels exhausted for {images}. 'f' Last processed text returned')
         
         return last_processed_text
-        
+
+    def find_vision_model_desc(self,i,images):
+
+        return None
+
     def image_documents(self,args):
                 
         # Here looping all the map sending from the ingest.py
@@ -182,7 +188,7 @@ class image_handler:
                 
                 # For each imaage it will send to the easyOCR model where found the image having any text or not 
                 get_ocr_per_image_text = self.find_text_by_OCR(i,images)
-                # get_vision_model_desc = self.find_vision_model_desc(i,images)
+                get_vision_model_desc = self.find_vision_model_desc(i,images)
                 self.logger.debug(f'Printing the OCR_Text for the page {i} and {images} is {get_ocr_per_image_text}')
 
         return None

@@ -55,3 +55,47 @@
    One-line summary<br>
    BaseSettings — turns env/config into a Python object with typed fields<br>
    SettingsConfigDict — tells it which .env file to use and how to read it<br>
+
+
+
+   ### PS C:\Users\Vivek\GIT Projects\RAG-APPLICATION> docker ps [check which container is up nd running]
+   
+   CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS    <br>              PORTS                                             NAMES
+   03a0c3ff6944   ollama/ollama:latest   "/bin/ollama serve"      6 weeks ago   Up 25 hours (healthy)   0.0.0.0:11434->11434/tcp, [::]<br>
+   :11434->11434/tcp   banking_ollama<br>
+   b7df87108373   postgres:16-alpine     "docker-entrypoint.s…"   6 weeks ago   Up 25 hours (healthy)   0.0.0.0:5433->5432/tcp, [::]<br>
+   :5433->5432/tcp       banking_postgres<br><br>
+   
+   
+   ### PS C:\Users\Vivek\GIT Projects\RAG-APPLICATION> docker exec -it banking_ollama ollama list<br> [which models are installed in ollama]
+   NAME             ID              SIZE      MODIFIED   <br>
+   llama3:latest    365c0bd3c000    4.7 GB    6 days ago    <br>
+
+   What's next:<br>
+      Try Docker Debug for seamless, persistent debugging tools in any container or image → docker debug banking_ollama<br>
+      Learn more at https://docs.docker.com/go/debug-cli/<br>
+
+   ### To pull any model from the ollama docker exec -it banking_ollama ollama pull llava
+   
+   PS C:\Users\Vivek\GIT Projects\RAG-APPLICATION> docker exec -it banking_ollama ollama list<br>
+   NAME             ID              SIZE      MODIFIED<br>
+   llama3:latest    365c0bd3c000    4.7 GB    6 days ago<br>
+
+   What's next:<br>
+      Try Docker Debug for seamless, persistent debugging tools in any container or image → docker debug banking_ollama<br>
+      Learn more at https://docs.docker.com/go/debug-cli/<br>
+   PS C:\Users\Vivek\GIT Projects\RAG-APPLICATION> docker exec -it banking_ollama ollama pull llava  <br>
+   pulling manifest<br>
+   pulling 170370233dd5: 100% ▕██████████████████████████████████████████████████████████████████████████████████████████▏ 4.1 GB<br>
+   pulling 72d6f08a42f6: 100% ▕██████████████████████████████████████████████████████████████████████████████████████████▏ 624 MB<br>
+   pulling 43070e2d4e53: 100% ▕██████████████████████████████████████████████████████████████████████████████████████████▏  11 KB<br>
+   pulling c43332387573: 100% ▕██████████████████████████████████████████████████████████████████████████████████████████▏   67 B<br>
+   pulling ed11eda7790d: 100% ▕██████████████████████████████████████████████████████████████████████████████████████████▏   30 B<br>
+   pulling 7c658f9561e5: 100% ▕██████████████████████████████████████████████████████████████████████████████████████████▏  564 B<br>
+   verifying sha256 digest<br>
+   writing manifest<br>
+   success<br>
+
+   What's next:<br>
+      Try Docker Debug for seamless, persistent debugging tools in any container or image → docker debug banking_ollama<br>
+      Learn more at https://docs.docker.com/go/debug-cli/<br>
