@@ -4,7 +4,7 @@ from langchain_core.documents.base import Document
 from importlib import metadata
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from torch._inductor.ir import NoneLayout
-from config.settings import Settings
+from config.settings import settings
 from BASE_DIR.directory import Directory
 from langchain_core.documents import Document
 from config.logger import logger
@@ -19,15 +19,15 @@ class image_handler:
     def __init__(self) -> None:
 
         # If object is already present in the file then don't need to specify () it only required when you call any class
-        self.chunk_size = Settings().CHUNK_SIZE
-        self.source = Settings().DOCS_PATH
+        self.chunk_size = settings.CHUNK_SIZE
+        self.source = settings.DOCS_PATH
         self.base_dir = Directory().dir()
-        self.temp_preprocess_image_path = Settings().PREPROCESSED_IMAGE_TEMP_PATH
-        self.CHUNK_OVERLAP = Settings().CHUNK_OVERLAP
+        self.temp_preprocess_image_path = settings.PREPROCESSED_IMAGE_TEMP_PATH
+        self.CHUNK_OVERLAP = settings.CHUNK_OVERLAP
         self.logger = logger
         self.Ocr_Model_reader = easyocr.Reader(['en'])
-        self.ocr_text_confidence_score = Settings().ocr_texfinding_confidence_level 
-        self.maximum_process_level = Settings().MAXIMUM_IMAGE_PROCESS_level
+        self.ocr_text_confidence_score = settings.ocr_texfinding_confidence_level 
+        self.maximum_process_level = settings.MAXIMUM_IMAGE_PROCESS_level
 
     def check_ocr_confidence(self,images,result): 
         # check all confidence score if anything fails then reprocess the image and if confidence is ohk for all then append the text and return 
@@ -37,14 +37,15 @@ class image_handler:
             
         # Looping the list from the result where find text and confidence
         for _,text,confidence in result:
-            
-            text_from_image.append(text)
 
             ''' if the confidence of the text is less than expectation then it will invoke the pillow to correct the image and clear the image 
             then sent back the corrected image to find the text'''
             if confidence < self.ocr_text_confidence_score:
                 confidence_valid = False
                 self.logger.info(f'Low Confidence found for image path {images} reprocessing of this image required')
+                break
+
+            text_from_image.append(text)
             
         return confidence_valid, text_from_image
 
@@ -149,7 +150,7 @@ class image_handler:
                 # self.logger.debug(f'Level {level}: 'f'No text detected for {images}')
                 continue
             
-            confidence_valid,updated_text_from_image = self.check_ocr_confidence(images,result)
+            confidence_valid,updated_text_from_image = self.check_ocr_confidence(images,preprocessed_image_result)
 
             # If all the confidence is above the thresshold then return the text simplly
 
@@ -173,7 +174,7 @@ class image_handler:
         for i in args:
             
             # if the page don't have any images then skip this 
-            if args[i]["Images"] == "":
+            if not args[i]["Images"]:
                 continue
             
             # if the page having any images then it will be picked and in loop
