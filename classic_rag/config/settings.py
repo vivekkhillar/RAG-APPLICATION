@@ -37,8 +37,9 @@ class Settings(BaseSettings):
     LOGS_PATH: str    
     ENVIORMENT: str
     LOG_LEVEL: str
-    
-
+    ocr_texfinding_confidence_level: float
+    PREPROCESSED_IMAGE_TEMP_PATH: str
+    MAXIMUM_IMAGE_PROCESS_level: int
 # settings = Settings()
 
 

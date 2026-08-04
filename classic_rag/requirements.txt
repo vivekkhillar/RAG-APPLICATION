@@ -9,3 +9,4 @@ uvicorn[standard]>=0.27.0 # which provide ASGI and WSGI interface which will hoo
 python-dotenv>=1.2.2 # To load the enviorment config
 pydantic-settings>=2.14.2 # typed settings from .env
 requests>=2.34.2 # HTTP calls to Ollama for LLaVA
+easyocr>=1.7.1 #easy ocr to find out the text from the image retrived from the PDF
