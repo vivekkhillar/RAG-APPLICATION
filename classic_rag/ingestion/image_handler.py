@@ -110,9 +110,7 @@ class image_handler:
         
         # If nothing found from the OCR model then return Logging null and return None
         if not result:
-            continue
-            # self.logger.debug(f'No text detected for {images}')
-        
+            self.logger.debug(f'No text detected for {images}')
         # If any Text is found from the OCR model then it will check if any lowconfidence found if then break the loop and reprocess the image else return the Text
         else:
 
