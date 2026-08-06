@@ -1609,3 +1609,4 @@ The overall meaning of the image seems to be that of a formal portrait or headsh
 
 The overall meaning of the image seems to be that of a formal portrait or headshot, possibly for professional use such as a company website, a political campaign, or a personal branding. The man's attire and demeanor suggest he may hold a position of authority or leadership, given his confident expression and the context in which such images are typically used. 
 19356 | 2026-08-06 17:58:10,886 | DEBUG    | image_handler.py:115   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_4_img_2.jpeg
+19356 | 2026-08-06 17:58:31,714 | DEBUG    | image_handler.py:302   | image_documents | CLASSIC_RAG          | Printing the OCR_Text for the page 4 and C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_4_img_2.jpeg is None
