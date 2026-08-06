@@ -1,19 +1,15 @@
-from abc import abstractmethod
-from shlex import join
 from langchain_core.documents.base import Document
 from importlib import metadata
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage
-from torch._inductor.ir import NoneLayout
 from config.settings import settings
 from BASE_DIR.directory import Directory
 from langchain_core.documents import Document
 from config.logger import logger
-from BASE_DIR.directory import Directory
 from PIL import Image,ImageEnhance,ImageFilter
 import numpy as np
-import json,easyocr,os
+import easyocr,base64,os,io
 
 
 class image_handler: 
@@ -30,6 +26,7 @@ class image_handler:
         self.Ocr_Model_reader = easyocr.Reader(['en'])
         self.ocr_text_confidence_score = settings.ocr_texfinding_confidence_level 
         self.maximum_process_level = settings.MAXIMUM_IMAGE_PROCESS_level
+        self.vision_model = ChatOllama(model = settings.VISION_MODEL, temperature = settings.VISION_MODEL_TEMPERATURE, base_url = settings.OLLAMA_URL)
 
     def check_ocr_confidence(self,images,result): 
         # check all confidence score if anything fails then reprocess the image and if confidence is ohk for all then append the text and return 
@@ -169,14 +166,126 @@ class image_handler:
         
         return last_processed_text
 
-    def find_vision_model_desc(self,i,images):
+    def encoded_the_img(self,images):
 
-        return None
+        with open(images, "rb") as image_file:
+            
+            # The image file is already opened in the read mode so we need to seek the end of the file to find the size of the file
+            image_file.seek(0, os.SEEK_END)
+            file_size = image_file.tell()
+            image_file.seek(0)
+
+            # Create a max file size for the image to be encoded
+            max_file_size = 5* 1024*1024
+
+            image = Image.open(image_file)
+
+            # find out the size of the image
+            if file_size <= max_file_size:
+                
+                buffer = io.BytesIO()
+                image.save(buffer,format=image.format or "PNG")
+            
+            else:
+
+                image = image.convert("RGB")
+                buffer = io.BytesIO()
+                image.save(buffer,format="JPEG",quality=85)
+                compressed_size = buffer.tell()
+
+                if compressed_size > max_file_size:
+                    
+                    width,height = image.size
+                    ratio = min(1600/width, 1600 / height)
+                    ratio = min(ratio,1)
+
+                    new_size = (
+                                    int(width * ratio),
+                                    int(height * ratio)
+                                )
+
+                    image = image.resize(new_size,Image.Resampling.LANCZOS)
+                    buffer = io.BytesIO()
+                    image.save(buffer,format="JPEG",quality=85)
+
+            # seek the buffer to the beginning of the file to read the image
+            buffer.seek(0)
+
+            # encode the image to base64
+            encoded = base64.b64encode(buffer.read()).decode("utf-8")
+            buffer.close()
+
+            return encoded
+
+    def find_vision_model_desc(self,i,image):
+
+        # invoke the encoded_the_img function to encode the image to base64
+        encoded_image = self.encoded_the_img(image)
+
+        message = HumanMessage(
+            content= [{
+                "type": "text",
+                "text": """
+                Analyze this image and provide a detailed description.
+
+                Include:
+                - What is shown in the image
+                - Any visible text
+                - Tables
+                - Charts
+                - Graphs
+                - Important numbers
+                - Labels
+                - Overall meaning
+
+                Do not make up information that is not visible.
+                """
+            },
+            {
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:image/jpeg;base64,{encoded_image}"
+                }
+            }]
+        )
+        
+        # invoke the vision model to find the description of the image
+        description = self.vision_model.invoke([message])
+        self.logger.debug(f'Printing the description for the image {image} is {description.content}')
+        return description.content
+
+    def document_builder(self,i,images,get_ocr_per_image_text,get_vision_model_desc):
+        
+        has_ocr = bool(get_ocr_per_image_text and get_ocr_per_image_text.strip())
+        has_vision_desc = bool(get_vision_model_desc and get_vision_model_desc.strip())
+
+        if has_ocr and has_vision_desc: 
+            content = f"{get_vision_model_desc} and text found from the OCR: {get_ocr_per_image_text}"
+        
+        elif has_vision_desc:
+            content =  get_vision_model_desc
+        
+        elif has_ocr:
+            content = f"Text found in image: {get_ocr_per_image_text}"
+        
+        else:
+            logger.warning(f"Both empty for {images} — skipping")
+            return None
+
+        return Document(page_content=content, metadata = {
+            "source" : self.source,
+            "page" : i,
+            "type" : "Image",
+            "image_path" : images,
+            "has_ocr"    : has_ocr,
+            "has_llava"  : has_vision_desc
+        })
 
     def image_documents(self,args):
-                
-        # Here looping all the map sending from the ingest.py
 
+        all_image_docs = []
+
+        # Here looping all the map sending from the ingest.py
         for i in args:
             
             # if the page don't have any images then skip this 
@@ -186,16 +295,28 @@ class image_handler:
             # if the page having any images then it will be picked and in loop
             for images in args[i]["Images"]:
                 
-                # For each imaage it will send to the easyOCR model where found the image having any text or not 
-                get_ocr_per_image_text = self.find_text_by_OCR(i,images)
-                get_vision_model_desc = self.find_vision_model_desc(i,images)
-                self.logger.debug(f'Printing the OCR_Text for the page {i} and {images} is {get_ocr_per_image_text}')
+                try:
+                
+                    # For each imaage it will send to the easyOCR model where found the image having any text or not 
+                    get_ocr_per_image_text = self.find_text_by_OCR(i,images)
+                    self.logger.debug(f'Printing the OCR_Text for the page {i} and {images} is {get_ocr_per_image_text}')
 
-        return None
+                    get_vision_model_desc = self.find_vision_model_desc(i,images)
+                    self.logger.debug(f'Printing the visionmodel description for the page {i} and {images} is {get_vision_model_desc}')
+
+                    doc = self.document_builder(i,images,get_ocr_per_image_text,get_vision_model_desc)
+
+                    if doc is not None:
+                        all_image_docs.append(doc)
+                
+                except Exception as e:
+                    self.logger.error(f'Error in finding the text or description for the image {images} on page {i} is {e}')
+
+        return all_image_docs
 
     
 if __name__ == "__main__":
 
-    image_document = image_handler("","")
+    image_document = image_handler()
     print (image_document)
 

@@ -40,6 +40,8 @@ class Settings(BaseSettings):
     ocr_texfinding_confidence_level: float
     PREPROCESSED_IMAGE_TEMP_PATH: str
     MAXIMUM_IMAGE_PROCESS_level: int
+    VISION_MODEL_TEMPERATURE: float
+
     
 settings = Settings()
 
