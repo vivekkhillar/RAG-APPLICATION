@@ -1,6 +1,4 @@
 from langchain_core.documents.base import Document
-from importlib import metadata
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage
 from config.settings import settings
