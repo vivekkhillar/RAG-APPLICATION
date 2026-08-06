@@ -298,10 +298,10 @@ class image_handler:
                 
                     # For each imaage it will send to the easyOCR model where found the image having any text or not 
                     get_ocr_per_image_text = self.find_text_by_OCR(i,images)
-                    # self.logger.debug(f'Printing the OCR_Text for the page {i} and {images} is {get_ocr_per_image_text}')
+                    self.logger.debug(f'Printing the OCR_Text for the page {i} and {images} is {get_ocr_per_image_text}')
 
                     get_vision_model_desc = self.find_vision_model_desc(i,images)
-                    # self.logger.debug(f'Printing the visionmodel description for the page {i} and {images} is {get_vision_model_desc}')
+                    self.logger.debug(f'Printing the visionmodel description for the page {i} and {images} is {get_vision_model_desc}')
 
                     doc = self.document_builder(i,images,get_ocr_per_image_text,get_vision_model_desc)
 
