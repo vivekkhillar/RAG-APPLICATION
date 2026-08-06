@@ -110,7 +110,8 @@ class image_handler:
         
         # If nothing found from the OCR model then return Logging null and return None
         if not result:
-            self.logger.debug(f'No text detected for {images}')
+            continue
+            # self.logger.debug(f'No text detected for {images}')
         
         # If any Text is found from the OCR model then it will check if any lowconfidence found if then break the loop and reprocess the image else return the Text
         else:
@@ -249,7 +250,7 @@ class image_handler:
         
         # invoke the vision model to find the description of the image
         description = self.vision_model.invoke([message])
-        self.logger.debug(f'Printing the description for the image {image} is {description.content}')
+        # self.logger.debug(f'Printing the description for the image {image} is {description.content}')
         return description.content
 
     def document_builder(self,i,images,get_ocr_per_image_text,get_vision_model_desc):
@@ -297,10 +298,10 @@ class image_handler:
                 
                     # For each imaage it will send to the easyOCR model where found the image having any text or not 
                     get_ocr_per_image_text = self.find_text_by_OCR(i,images)
-                    self.logger.debug(f'Printing the OCR_Text for the page {i} and {images} is {get_ocr_per_image_text}')
+                    # self.logger.debug(f'Printing the OCR_Text for the page {i} and {images} is {get_ocr_per_image_text}')
 
                     get_vision_model_desc = self.find_vision_model_desc(i,images)
-                    self.logger.debug(f'Printing the visionmodel description for the page {i} and {images} is {get_vision_model_desc}')
+                    # self.logger.debug(f'Printing the visionmodel description for the page {i} and {images} is {get_vision_model_desc}')
 
                     doc = self.document_builder(i,images,get_ocr_per_image_text,get_vision_model_desc)
 

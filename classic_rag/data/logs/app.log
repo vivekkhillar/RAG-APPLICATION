@@ -1560,3 +1560,52 @@ On the right side, there's another section that seems to contain a graph or char
 The overall meaning of the image is unclear without additional context or a higher-resolution version of the image. It seems to be a screenshot from a software application that is used for reporting or data analysis, but without more information, it's not possible to provide a detailed description of the content. 
 19356 | 2026-08-06 17:53:34,666 | DEBUG    | image_handler.py:115   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_2_img_18.jpeg
 19356 | 2026-08-06 17:53:34,835 | DEBUG    | image_handler.py:302   | image_documents | CLASSIC_RAG          | Printing the OCR_Text for the page 2 and C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_2_img_18.jpeg is None
+19356 | 2026-08-06 17:56:14,067 | DEBUG    | image_handler.py:254   | find_vision_model_desc | CLASSIC_RAG          | Printing the description for the image C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_2_img_18.jpeg is  The image you've provided appears to be a screenshot of a webpage or a digital document with a plain white background and some text and graphics. Here's a detailed description:
+
+- There are two main sections in the image:
+  - On the left side, there is a vertical navigation bar with what seems to be links or menu items, but the text is too small to read clearly.
+  - On the right side, there is a larger section that contains a table and a graph.
+
+- The table has two columns, labeled "Column1" and "Column2." There are three rows of data in the table:
+   - The first row shows "100" in both columns.
+   - The second row shows "50" in the left column and "75" in the right column.
+   - The third row shows "25" in the left column and "50" in the right column.
+
+- Below the table, there is a graph with two lines representing data over time. The x-axis of the graph is labeled "Time," but the specific values are not visible due to the image's resolution. The y-axis is labeled "Value," and it ranges from 0 to 100.
+
+- The graph shows two lines, one in blue and one in red, which likely represent different sets of data being compared over time. The blue line starts at a value of approximately 50 and increases to around 75 by the end of the visible timeframe on the x-axis. The red line starts at a value of approximately 100 and decreases to around 25 by the end of the visible timeframe.
+
+- There is no visible text that provides context or labels for the data in the table or graph.
+
+- Overall, the image seems to be a screenshot from a financial dashboard or report, showing some kind of performance metrics over time, with two different sets of data being compared. The exact nature of the data (e.g., sales figures, stock prices) is not clear due to the lack of labels and context provided in the image. 
+19356 | 2026-08-06 17:56:14,070 | DEBUG    | image_handler.py:305   | image_documents | CLASSIC_RAG          | Printing the visionmodel description for the page 2 and C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_2_img_18.jpeg is  The image you've provided appears to be a screenshot of a webpage or a digital document with a plain white background and some text and graphics. Here's a detailed description:
+
+- There are two main sections in the image:
+  - On the left side, there is a vertical navigation bar with what seems to be links or menu items, but the text is too small to read clearly.
+  - On the right side, there is a larger section that contains a table and a graph.
+
+- The table has two columns, labeled "Column1" and "Column2." There are three rows of data in the table:
+   - The first row shows "100" in both columns.
+   - The second row shows "50" in the left column and "75" in the right column.
+   - The third row shows "25" in the left column and "50" in the right column.
+
+- Below the table, there is a graph with two lines representing data over time. The x-axis of the graph is labeled "Time," but the specific values are not visible due to the image's resolution. The y-axis is labeled "Value," and it ranges from 0 to 100.
+
+- The graph shows two lines, one in blue and one in red, which likely represent different sets of data being compared over time. The blue line starts at a value of approximately 50 and increases to around 75 by the end of the visible timeframe on the x-axis. The red line starts at a value of approximately 100 and decreases to around 25 by the end of the visible timeframe.
+
+- There is no visible text that provides context or labels for the data in the table or graph.
+
+- Overall, the image seems to be a screenshot from a financial dashboard or report, showing some kind of performance metrics over time, with two different sets of data being compared. The exact nature of the data (e.g., sales figures, stock prices) is not clear due to the lack of labels and context provided in the image. 
+19356 | 2026-08-06 17:56:14,146 | DEBUG    | image_handler.py:115   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_2_img_19.jpeg
+19356 | 2026-08-06 17:56:14,257 | DEBUG    | image_handler.py:302   | image_documents | CLASSIC_RAG          | Printing the OCR_Text for the page 2 and C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_2_img_19.jpeg is None
+19356 | 2026-08-06 17:56:45,680 | DEBUG    | image_handler.py:254   | find_vision_model_desc | CLASSIC_RAG          | Printing the description for the image C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_2_img_19.jpeg is  The image you've provided appears to be a screenshot of a webpage or an application interface with a plain white background and minimal content. There are no visible texts, tables, charts, graphs, or any other discernible elements that would provide additional context or information. The overall meaning of the image is not clear due to the lack of content. If you have more details about the image or if there's a specific aspect you're interested in, please let me know! 
+19356 | 2026-08-06 17:56:45,681 | DEBUG    | image_handler.py:305   | image_documents | CLASSIC_RAG          | Printing the visionmodel description for the page 2 and C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_2_img_19.jpeg is  The image you've provided appears to be a screenshot of a webpage or an application interface with a plain white background and minimal content. There are no visible texts, tables, charts, graphs, or any other discernible elements that would provide additional context or information. The overall meaning of the image is not clear due to the lack of content. If you have more details about the image or if there's a specific aspect you're interested in, please let me know! 
+19356 | 2026-08-06 17:56:47,180 | DEBUG    | image_handler.py:115   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_4_img_1.jpeg
+19356 | 2026-08-06 17:57:09,160 | DEBUG    | image_handler.py:302   | image_documents | CLASSIC_RAG          | Printing the OCR_Text for the page 4 and C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_4_img_1.jpeg is 3
+19356 | 2026-08-06 17:58:09,514 | DEBUG    | image_handler.py:254   | find_vision_model_desc | CLASSIC_RAG          | Printing the description for the image C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_4_img_1.jpeg is  The image shows a man standing in front of a black background with a white border at the bottom. He appears to be smiling and looking directly at the camera. The man has gray hair, wears glasses, and is dressed in a dark suit with a tie. There are no visible texts, tables, charts, graphs, or important numbers in this image.
+
+The overall meaning of the image seems to be that of a formal portrait or headshot, possibly for professional use such as a company website, a political campaign, or a personal branding. The man's attire and demeanor suggest he may hold a position of authority or leadership, given his confident expression and the context in which such images are typically used. 
+19356 | 2026-08-06 17:58:09,514 | DEBUG    | image_handler.py:305   | image_documents | CLASSIC_RAG          | Printing the visionmodel description for the page 4 and C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_4_img_1.jpeg is  The image shows a man standing in front of a black background with a white border at the bottom. He appears to be smiling and looking directly at the camera. The man has gray hair, wears glasses, and is dressed in a dark suit with a tie. There are no visible texts, tables, charts, graphs, or important numbers in this image.
+
+The overall meaning of the image seems to be that of a formal portrait or headshot, possibly for professional use such as a company website, a political campaign, or a personal branding. The man's attire and demeanor suggest he may hold a position of authority or leadership, given his confident expression and the context in which such images are typically used. 
+19356 | 2026-08-06 17:58:10,886 | DEBUG    | image_handler.py:115   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_4_img_2.jpeg
