@@ -1967,3 +1967,7 @@ In terms of tables, charts, graphs, or important numbers, there are none immedia
 25404 | 2026-08-07 12:40:21,086 | INFO     | splitter.py:43    | splitter | CLASSIC_RAG          | Length of text for page 146 is : 374
 25404 | 2026-08-07 12:40:21,086 | INFO     | splitter.py:45    | splitter | CLASSIC_RAG          | Page 146 having 1 chunks
 25404 | 2026-08-07 12:41:48,273 | DEBUG    | image_handler.py:114   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_1_img_2.jpeg
+25404 | 2026-08-07 12:44:30,034 | DEBUG    | image_handler.py:114   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_1_img_3.png
+25404 | 2026-08-07 12:47:29,117 | DEBUG    | image_handler.py:114   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_1_img_4.jpeg
+25404 | 2026-08-07 12:50:05,886 | DEBUG    | image_handler.py:114   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_1_img_5.jpeg
+25404 | 2026-08-07 12:53:04,039 | DEBUG    | image_handler.py:114   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_1_img_6.jpeg
