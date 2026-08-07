@@ -1971,3 +1971,4 @@ In terms of tables, charts, graphs, or important numbers, there are none immedia
 25404 | 2026-08-07 12:47:29,117 | DEBUG    | image_handler.py:114   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_1_img_4.jpeg
 25404 | 2026-08-07 12:50:05,886 | DEBUG    | image_handler.py:114   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_1_img_5.jpeg
 25404 | 2026-08-07 12:53:04,039 | DEBUG    | image_handler.py:114   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_1_img_6.jpeg
+25404 | 2026-08-07 12:57:12,716 | DEBUG    | image_handler.py:114   | find_text_by_OCR | CLASSIC_RAG          | No text detected for C:\Users\Vivek\GIT Projects\RAG-APPLICATION\classic_rag/data/images\page_1_img_7.jpeg
