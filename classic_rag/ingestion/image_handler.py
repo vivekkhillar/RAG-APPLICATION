@@ -3,7 +3,6 @@ from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage
 from config.settings import settings
 from BASE_DIR.directory import Directory
-from langchain_core.documents import Document
 from config.logger import logger
 from PIL import Image,ImageEnhance,ImageFilter
 import numpy as np
@@ -24,7 +23,9 @@ class image_handler:
         self.Ocr_Model_reader = easyocr.Reader(['en'])
         self.ocr_text_confidence_score = settings.ocr_texfinding_confidence_level 
         self.maximum_process_level = settings.MAXIMUM_IMAGE_PROCESS_level
-        self.vision_model = ChatOllama(model = settings.VISION_MODEL, temperature = settings.VISION_MODEL_TEMPERATURE, base_url = settings.OLLAMA_URL)
+        self.vision_model = ChatOllama(model = settings.VISION_MODEL, 
+                                        temperature = settings.VISION_MODEL_TEMPERATURE, 
+                                        base_url = settings.OLLAMA_URL)
 
     def check_ocr_confidence(self,images,result): 
         # check all confidence score if anything fails then reprocess the image and if confidence is ohk for all then append the text and return 
@@ -296,10 +297,10 @@ class image_handler:
                 
                     # For each imaage it will send to the easyOCR model where found the image having any text or not 
                     get_ocr_per_image_text = self.find_text_by_OCR(i,images)
-                    self.logger.debug(f'Printing the OCR_Text for the page {i} and {images} is {get_ocr_per_image_text}')
+                    # self.logger.debug(f'Printing the OCR_Text for the page {i} and {images} is {get_ocr_per_image_text}')
 
                     get_vision_model_desc = self.find_vision_model_desc(i,images)
-                    self.logger.debug(f'Printing the visionmodel description for the page {i} and {images} is {get_vision_model_desc}')
+                    # self.logger.debug(f'Printing the visionmodel description for the page {i} and {images} is {get_vision_model_desc}')
 
                     doc = self.document_builder(i,images,get_ocr_per_image_text,get_vision_model_desc)
 
@@ -311,7 +312,6 @@ class image_handler:
 
         return all_image_docs
 
-    
 if __name__ == "__main__":
 
     image_document = image_handler()
