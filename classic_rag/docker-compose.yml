@@ -1,16 +1,37 @@
+# services:
+
+#   qdrant:
+#     image: qdrant/qdrant:latest
+#     container_name: qdrant
+#     restart: unless-stopped
+
+#     ports:
+#       - "6333:6333"
+#       - "6334:6334"
+
+#     volumes:
+#       - qdrant_storage:/qdrant/storage
+
+# volumes:
+#   qdrant_storage:
+
 services:
 
-  qdrant:
-    image: qdrant/qdrant:latest
-    container_name: qdrant
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: chromadb
     restart: unless-stopped
 
     ports:
-      - "6333:6333"
-      - "6334:6334"
+      - "8001:8000"
 
     volumes:
-      - qdrant_storage:/qdrant/storage
+      - chroma_data:/chroma/chroma
+
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+      - CHROMA_SERVER_HTTP_PORT=8001
 
 volumes:
-  qdrant_storage:
+  chroma_data:

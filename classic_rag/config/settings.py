@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     VISION_MODEL: str
     EMBEDDING_MODEL: str
     CHROMA_HOST: str
+    CHROMA_PORT:int
     CHROMA_COLLECTION: str
     CHUNK_SIZE: int
     CHUNK_OVERLAP: int
@@ -35,13 +36,13 @@ class Settings(BaseSettings):
     DOCS_PATH: str
     IMAGES_PATH: str
     LOGS_PATH: str    
-    ENVIORMENT: str
+    ENVIRONMENT: str
     LOG_LEVEL: str
     ocr_texfinding_confidence_level: float
     PREPROCESSED_IMAGE_TEMP_PATH: str
     MAXIMUM_IMAGE_PROCESS_level: int
     VISION_MODEL_TEMPERATURE: float
-
+    PDF_NAME:str
     
 settings = Settings()
 

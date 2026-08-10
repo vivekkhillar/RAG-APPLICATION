@@ -3,7 +3,7 @@ import json
 from ingestion.loader import Load_pdf
 from ingestion.splitter import splitter_text
 from ingestion.image_handler import image_handler
-from ingestion.embedder import embedding
+from vectorstore.embeed_store import embeed_vector_store
 from config.logger import logger
 
 class ingest():
@@ -13,7 +13,7 @@ class ingest():
         self.doc_load = Load_pdf()
         self.chunk_per_page = splitter_text()
         self.image_processing = image_handler()
-        self.embed = embedding()
+        self.embed_store = embeed_vector_store()
         self.logger = logger
 
     def run(self):
@@ -38,10 +38,11 @@ class ingest():
 
         # Invoke the embedder to embedding all the documents
         all_documents = chunk_data_document + image_data_documents
-        self.logger.info(all_documents)
-        embbed_details = self.embed.embbed_image_text(all_documents)
+        # self.logger.info(f'Length of all documents are: {len(all_documents)}')
 
-
+        vector_store = self.embed_store.vector_store(all_documents)
+        self.logger.info(f'printing the vector_store {vector_store}')
+        self.logger.info(f'Embedded Details were to send in the vector data base are: {len(all_documents)}')
         # Store the embbed_details to the vector data base
         
         
