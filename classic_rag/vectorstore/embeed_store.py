@@ -16,7 +16,7 @@ class embeed_vector_store:
     def vector_store(self,all_documents):
 
         vectorstore = Chroma(
-            collection_name = self.PDF_name,
+            collection_name = self.collection,
             embedding_function= self.embedding_model,
             client= self.vector_db_client
         )
