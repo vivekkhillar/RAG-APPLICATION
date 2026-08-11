@@ -40,16 +40,16 @@ class ingest():
         all_documents = chunk_data_document + image_data_documents
         # self.logger.info(f'Length of all documents are: {len(all_documents)}')
 
+
+        # Store the embbed_details to the vector data base
         vector_store = self.embed_store.vector_store(all_documents)
         self.logger.info(f'printing the vector_store {vector_store}')
-        self.logger.info(f'Embedded Details were to send in the vector data base are: {len(all_documents)}')
-        # Store the embbed_details to the vector data base
-        
+        self.logger.info(f'Embedded Details were to send in the vector data base are: {len(all_documents)}')       
+        self.logger.info("Pipeline Executed Successfully")
         
         return "Pipeline Executed Successfully"
 
         
-
 if __name__ == "__main__":
     pipeline = ingest()
     print (pipeline.run())

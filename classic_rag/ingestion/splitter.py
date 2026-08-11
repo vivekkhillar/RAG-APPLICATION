@@ -43,7 +43,7 @@ class splitter_text:
             self.logger.info(f'Length of text for page {i} is : {len(args[i]['Text'])}')
             small_chunk = self.splitter_model.split_documents([DOC])
             self.logger.info(f'Page {i} having {len(small_chunk)} chunks')
-            chunk_data.append(small_chunk)
+            chunk_data.extend(small_chunk)
 
         return chunk_data
 
