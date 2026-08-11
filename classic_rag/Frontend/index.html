@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIL Document QA</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <script src="js/script.js"></script>
+    <header>
+        <div class="header-left">
+          <div class="logo">📄</div>
+          <div>
+            <div class="header-title">RIL Document QA</div>
+            <div class="header-sub">Integrated Annual Report 2024-25</div>
+          </div>
+        </div>
+        <div class="status-pill">
+          <div class="status-dot"></div>
+          RAG Pipeline Active
+        </div>
+      </header>
+    
+      <div class="layout">
+ 
+        <!-- sidebar -->
+        <aside class="sidebar">
+       
+          <div class="sidebar-label">Document</div>
+          <div class="doc-card">
+            <div class="doc-name">RIL Annual Report 2024-25</div>
+            <div class="doc-meta">146 pages · PDF</div>
+          </div>
+       
+          <div class="sidebar-label">Pipeline</div>
+          <div class="doc-card">
+            <div class="stat-row"><span class="stat-label">Embedding</span><span class="stat-val">mxbai-embed-large</span></div>
+            <div class="stat-row"><span class="stat-label">LLM</span><span class="stat-val">phi3:mini</span></div>
+            <div class="stat-row"><span class="stat-label">Vector DB</span><span class="stat-val">ChromaDB</span></div>
+            <div class="stat-row"><span class="stat-label">Chunk size</span><span class="stat-val">400 tokens</span></div>
+            <div class="stat-row"><span class="stat-label">Top-k</span><span class="stat-val">4 chunks</span></div>
+          </div>
+       
+          <div class="sidebar-label">Try these</div>
+          <div class="sample-q" onclick="setQuery(this)">What is Reliance's EBITDA for FY 2024-25?</div>
+          <div class="sample-q" onclick="setQuery(this)">What are the key business segments of RIL?</div>
+          <div class="sample-q" onclick="setQuery(this)">What is the CSR contribution in 2024-25?</div>
+          <div class="sample-q" onclick="setQuery(this)">Describe the revenue chart shown in the report</div>
+          <div class="sample-q" onclick="setQuery(this)">What does the Chairman say about growth?</div>
+       
+        </aside>
+       
+        <!-- chat -->
+        <div class="chat-wrap">
+       
+          <div class="messages" id="messages">
+            <div class="empty-state" id="emptyState">
+              <div class="empty-icon">🔍</div>
+              <div class="empty-title">Ask anything about the RIL Annual Report</div>
+              <div class="empty-sub">Your questions are answered using semantic search across 146 pages of text and image content.</div>
+            </div>
+          </div>
+       
+          <div class="input-bar">
+            <div class="input-wrap">
+              <textarea
+                id="queryInput"
+                placeholder="Ask a question about the RIL Annual Report..."
+                rows="1"
+                onkeydown="handleKey(event)"
+                oninput="autoResize(this)"
+              ></textarea>
+              <button class="send-btn" id="sendBtn" onclick="sendQuery()">↑</button>
+            </div>
+            <div class="input-hint">Press Enter to send · Shift+Enter for new line</div>
+          </div>
+       
+        </div>
+      </div>
+    </body>
+</html>
+    

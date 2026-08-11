@@ -30,6 +30,7 @@ class Load_pdf:
             self.logger.info('Loading the PDF per page to read all the text and images')
 
             for page_number in range (1,len(doc)+1):
+                
                 page = doc.load_page(page_number-1)
 
                 # To load the text then only use get_text()
@@ -37,6 +38,19 @@ class Load_pdf:
 
                 # To load images then use get_images() which include the image object ID from the page 
                 images = page.get_images(full= True)
+                
+                # To load tables then use this to update in the json extracted how many tables and sent in the map
+                tables = page.find_tables()
+
+                page_tables = []
+
+                for table_index, table in enumerate(tables.tables, start=1):
+                    
+                    table_data = table.extract()
+                    page_tables.append({
+                        "table_number": table_index,
+                        "data": table_data
+                    })
                 
                 # create a list of page_images 
                 page_images = []
@@ -67,8 +81,8 @@ class Load_pdf:
                         f.write(image_bytes)
 
                     page_images.append(image_unique_path)
-
-                self.text_image_per_page_details[page_number] = {"Text": text, "Images" : page_images}
+                
+                self.text_image_per_page_details[page_number] = {"Text": text, "Images" : page_images, "tables" : page_tables}
 
             self.logger.info('Returning the JSON DUMP which mapped to loaded_doc')
             self.logger.info(json.dumps(self.text_image_per_page_details,indent=4))

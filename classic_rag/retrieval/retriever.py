@@ -18,8 +18,6 @@ class retriver_builder:
 
         self.logger.info('Returning the retriver Function')
         return self.vector_store.as_retriever(
-            search_type = "mmr",
+            search_type = "mmr", #max marginal relevance — avoids duplicate chunks)
             search_kwargs = {"k": settings.RETRIEVER_K}
         )
-
-        

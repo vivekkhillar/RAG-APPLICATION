@@ -25,6 +25,7 @@ class Settings(BaseSettings):
 
     OLLAMA_URL: str
     OLLAMA_MODEL: str
+    OLLAMA_MODEL_TEMPERATURE: float
     VISION_MODEL: str
     EMBEDDING_MODEL: str
     CHROMA_HOST: str

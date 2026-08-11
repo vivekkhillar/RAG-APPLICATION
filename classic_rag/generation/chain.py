@@ -10,7 +10,7 @@ class RAGChain:
     def __init__(self) -> None:
         self.prompt = PromptBuilder().get_prompt()
         self.llm = OllamaLLM(
-            model = settings.OLLAMA_MODEL,base_url=settings.OLLAMA_URL
+            model = settings.OLLAMA_MODEL,base_url=settings.OLLAMA_URL, temperature=0.3
         )
         self.retriver = retriver_builder().get_retriver()
         self.logger = logger
@@ -54,7 +54,6 @@ class RAGChain:
         ]
         
         self.logger.info(f"sources generated are : {sources}")
-
         
         self.logger.info(f"Query answered — {len(docs)} chunks retrieved")
 

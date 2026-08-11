@@ -16,7 +16,6 @@ class PromptBuilder:
                 - Answer only from the context provided
                 - If answer not in context → say "I don't know based on the document"
                 - Be concise and specific
-                - Mention page numbers when relevant
             """),
             ("human", """
                     Context from document:

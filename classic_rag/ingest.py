@@ -3,6 +3,7 @@ import json
 from ingestion.loader import Load_pdf
 from ingestion.splitter import splitter_text
 from ingestion.image_handler import image_handler
+from ingestion.table_handler import table_handler
 from vectorstore.embeed_store import embeed_vector_store
 from config.logger import logger
 
@@ -13,6 +14,7 @@ class ingest():
         self.doc_load = Load_pdf()
         self.chunk_per_page = splitter_text()
         self.image_processing = image_handler()
+        self.table_processing = table_handler()
         self.embed_store = embeed_vector_store()
         self.logger = logger
 
@@ -25,20 +27,25 @@ class ingest():
         
         # After the Map will save in the loaded_doc and sending to the splitter function where all the text will be converted to chunks on the basis of the overlap and chunk size
         chunk_data_document = self.chunk_per_page.splitter(loaded_doc)
-        # self.logger.info("Adding the chunk per page to the chunk_Text")
+        self.logger.info("Adding the chunk per page to the chunk_Text")
 
         # For debuggin purpose just check if all the chunks were came or not                
         # for chunks in chunk_data_document:
         #     self.logger.debug(chunks)
         
+
+        # Find the table documents and add allinto the documents for the flatten list then invoke the vector store 
+        table_documents = self.table_processing.table_documents(loaded_doc)
+        self.logger.info("Adding the table documents per page")
+
         # Now the same way the extracted images will send to the easyocr to find out if the image is having any text value or not that will be included into the metadata and store against the page_content
         # Also the images sent to the Lallava for the description of the image and combined with the metadata and documents
 
         image_data_documents = self.image_processing.image_documents(loaded_doc)
 
         # Invoke the embedder to embedding all the documents
-        all_documents = chunk_data_document + image_data_documents
-        # self.logger.info(f'Length of all documents are: {len(all_documents)}')
+        all_documents = chunk_data_document + image_data_documents + table_documents
+        self.logger.info(f'Length of all documents are: {len(all_documents)}')
 
 
         # Store the embbed_details to the vector data base
