@@ -1,225 +1,594 @@
-// ── config ──
-const API_URL = 'http://localhost:8000/query';
- 
-// ── auto resize textarea ──
+// ============================================================
+// CONFIG
+// ============================================================
+
+const API_URL = "http://localhost:8002/query";
+
+
+// ============================================================
+// AUTO RESIZE TEXTAREA
+// ============================================================
+
 function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 140) + "px";
 }
 
-// ── sample question click ──
+
+// ============================================================
+// SAMPLE QUESTION CLICK
+// ============================================================
+
 function setQuery(el) {
-  const input = document.getElementById('queryInput');
-  input.value = el.textContent;
-  autoResize(input);
-  input.focus();
+    const input = document.getElementById("queryInput");
+
+    input.value = el.textContent;
+
+    autoResize(input);
+
+    input.focus();
 }
 
-// ── enter key handler ──
+
+// ============================================================
+// ENTER KEY HANDLER
+// Enter      → Send
+// Shift+Enter → New line
+// ============================================================
+
 function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendQuery();
-  }
+
+    if (e.key === "Enter" && !e.shiftKey) {
+
+        e.preventDefault();
+
+        sendQuery();
+    }
 }
 
-// ── remove empty state ──
+
+// ============================================================
+// REMOVE EMPTY STATE
+// ============================================================
+
 function removeEmpty() {
-  const empty = document.getElementById('emptyState');
-  if (empty) empty.remove();
+
+    const empty = document.getElementById("emptyState");
+
+    if (empty) {
+        empty.remove();
+    }
 }
 
-// ── scroll to bottom ──
+
+// ============================================================
+// SCROLL TO BOTTOM
+// ============================================================
+
 function scrollBottom() {
-  const msgs = document.getElementById('messages');
-  msgs.scrollTop = msgs.scrollHeight;
+
+    const msgs = document.getElementById("messages");
+
+    if (msgs) {
+        msgs.scrollTop = msgs.scrollHeight;
+    }
 }
 
-// ── add user message ──
+
+// ============================================================
+// ADD USER MESSAGE
+// ============================================================
+
 function addUserMsg(text) {
-  removeEmpty();
-  const msgs = document.getElementById('messages');
-  const div = document.createElement('div');
-  div.className = 'msg user';
-  div.innerHTML = `
-    <div class="avatar user">👤</div>
-    <div class="bubble">${escHtml(text)}</div>
-  `;
-  msgs.appendChild(div);
-  scrollBottom();
+
+    removeEmpty();
+
+    const msgs = document.getElementById("messages");
+
+    const div = document.createElement("div");
+
+    div.className = "msg user";
+
+    div.innerHTML = `
+        <div class="avatar user">👤</div>
+
+        <div class="bubble">
+            ${escHtml(text)}
+        </div>
+    `;
+
+    msgs.appendChild(div);
+
+    scrollBottom();
 }
 
-// ── add thinking indicator ──
+
+// ============================================================
+// ADD THINKING INDICATOR
+// ============================================================
+
 function addThinking() {
-  const msgs = document.getElementById('messages');
-  const div = document.createElement('div');
-  div.className = 'thinking';
-  div.id = 'thinking';
-  div.innerHTML = `
-    <div class="avatar ai">🤖</div>
-    <div class="think-bubble">
-      <div class="dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-      Searching document and generating answer...
-    </div>
-  `;
-  msgs.appendChild(div);
-  scrollBottom();
-}
 
-// ── remove thinking indicator ──
-function removeThinking() {
-  const t = document.getElementById('thinking');
-  if (t) t.remove();
-}
+    const msgs = document.getElementById("messages");
 
-// ── add AI answer ──
-function addAIMsg(data) {
-  const msgs = document.getElementById('messages');
-  const div = document.createElement('div');
-  div.className = 'msg';
-
-  // build sources chips
-  let sourcesHtml = '';
-  if (data.sources && data.sources.length > 0) {
-    const chips = data.sources.map(s => {
-      const isImage = s.type === 'image' || s.type === 'Image';
-      return `
-        <div class="source-chip ${isImage ? 'chip-type-image' : ''}">
-          <span class="chip-icon">${isImage ? '🖼' : '📄'}</span>
-          Page ${s.page} · ${s.type}
-        </div>
-      `;
-    }).join('');
-
-    sourcesHtml = `
-      <div class="sources-wrap">
-        <div class="sources-label">Sources retrieved</div>
-        <div class="sources-list">${chips}</div>
-      </div>
-    `;
-  }
-
-  // build chunks toggle (if retrieved_chunks present)
-  let chunksHtml = '';
-  if (data.retrieved_chunks && data.retrieved_chunks.length > 0) {
-    const chunkId = 'chunks_' + Date.now();
-    const items = data.retrieved_chunks.map((c, i) => `
-      <div class="chunk-item">
-        <div class="chunk-header">
-          <span>Chunk ${i+1} · Page ${c.page} · ${c.type}</span>
-        </div>
-        ${escHtml(c.content)}...
-      </div>
-    `).join('');
-
-    chunksHtml = `
-      <button class="chunks-toggle" onclick="toggleChunks('${chunkId}')">
-        ▶ Show retrieved chunks
-      </button>
-      <div class="chunks-list" id="${chunkId}" style="display:none">
-        ${items}
-      </div>
-    `;
-  }
-
-  div.innerHTML = `
-    <div class="avatar ai">🤖</div>
-    <div class="bubble">
-      ${formatAnswer(data.answer)}
-      ${sourcesHtml}
-      ${chunksHtml}
-    </div>
-  `;
-
-  msgs.appendChild(div);
-  scrollBottom();
-}
-
-// ── add error message ──
-function addError(msg) {
-  const msgs = document.getElementById('messages');
-  const div = document.createElement('div');
-  div.className = 'msg';
-  div.innerHTML = `
-    <div class="avatar ai">🤖</div>
-    <div class="error-bubble">⚠️ ${escHtml(msg)}</div>
-  `;
-  msgs.appendChild(div);
-  scrollBottom();
-}
-
-// ── toggle chunks visibility ──
-function toggleChunks(id) {
-  const el  = document.getElementById(id);
-  const btn = el.previousElementSibling;
-  if (el.style.display === 'none') {
-    el.style.display = 'flex';
-    btn.textContent  = '▼ Hide retrieved chunks';
-  } else {
-    el.style.display = 'none';
-    btn.textContent  = '▶ Show retrieved chunks';
-  }
-}
-
-// ── format answer text ──
-function formatAnswer(text) {
-  return escHtml(text)
-    .replace(/\n\n/g, '</p><p style="margin-top:10px">')
-    .replace(/\n/g,   '<br>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/•\s/g,  '• ');
-}
-
-// ── escape html ──
-function escHtml(str) {
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
-}
-
-// ── main send function ──
-async function sendQuery() {
-  const input   = document.getElementById('queryInput');
-  const sendBtn = document.getElementById('sendBtn');
-  const question = input.value.trim();
-
-  if (!question) return;
-
-  // clear input
-  input.value = '';
-  autoResize(input);
-  sendBtn.disabled = true;
-
-  // show user message + thinking
-  addUserMsg(question);
-  addThinking();
-
-  try {
-    const response = await fetch(API_URL, {
-      method : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body   : JSON.stringify({ question })
-    });
-
+    // Avoid duplicate thinking indicators
     removeThinking();
 
-    if (!response.ok) {
-      addError(`API error ${response.status} — check your FastAPI server is running on port 8000`);
-      return;
+    const div = document.createElement("div");
+
+    div.className = "thinking";
+
+    div.id = "thinking";
+
+    div.innerHTML = `
+        <div class="avatar ai">🤖</div>
+
+        <div class="think-bubble">
+
+            <div class="dots">
+
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+
+            </div>
+
+            Searching document and generating answer...
+
+        </div>
+    `;
+
+    msgs.appendChild(div);
+
+    scrollBottom();
+}
+
+
+// ============================================================
+// REMOVE THINKING INDICATOR
+// ============================================================
+
+function removeThinking() {
+
+    const thinking = document.getElementById("thinking");
+
+    if (thinking) {
+        thinking.remove();
+    }
+}
+
+
+// ============================================================
+// ADD AI ANSWER
+// ============================================================
+
+function addAIMsg(data) {
+
+    const msgs = document.getElementById("messages");
+
+    const div = document.createElement("div");
+
+    div.className = "msg";
+
+
+// ============================================================
+// BUILD SOURCES
+// ============================================================
+
+    let sourcesHtml = "";
+
+    if (
+        data.sources &&
+        Array.isArray(data.sources) &&
+        data.sources.length > 0
+    ) {
+
+        const chips = data.sources.map(source => {
+
+            const isImage =
+                source.type &&
+                source.type.toLowerCase() === "image";
+
+            return `
+                <div class="source-chip ${isImage ? "chip-type-image" : ""}">
+
+                    <span class="chip-icon">
+                        ${isImage ? "🖼" : "📄"}
+                    </span>
+
+                    Page ${escHtml(String(source.page))}
+
+                    ·
+
+                    ${escHtml(String(source.type))}
+
+                </div>
+            `;
+
+        }).join("");
+
+
+        sourcesHtml = `
+            <div class="sources-wrap">
+
+                <div class="sources-label">
+                    Sources retrieved
+                </div>
+
+                <div class="sources-list">
+                    ${chips}
+                </div>
+
+            </div>
+        `;
     }
 
-    const data = await response.json();
-    addAIMsg(data);
 
-  } catch (err) {
-    removeThinking();
-    addError('Cannot connect to API — make sure FastAPI is running on http://localhost:8000');
-  } finally {
-    sendBtn.disabled = false;
-    input.focus();
-  }
+// ============================================================
+// BUILD RETRIEVED CHUNKS
+// ============================================================
+
+    let chunksHtml = "";
+
+    if (
+        data.retrieved_chunks &&
+        Array.isArray(data.retrieved_chunks) &&
+        data.retrieved_chunks.length > 0
+    ) {
+
+        const chunkId = "chunks_" + Date.now();
+
+        const items = data.retrieved_chunks.map((chunk, index) => {
+
+            return `
+                <div class="chunk-item">
+
+                    <div class="chunk-header">
+
+                        <span>
+                            Chunk ${index + 1}
+
+                            · Page ${escHtml(String(chunk.page))}
+
+                            · ${escHtml(String(chunk.type))}
+                        </span>
+
+                    </div>
+
+                    <div class="chunk-content">
+
+                        ${escHtml(String(chunk.content || ""))}
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+
+        chunksHtml = `
+            <button
+                class="chunks-toggle"
+                onclick="toggleChunks('${chunkId}')"
+            >
+                ▶ Show retrieved chunks
+            </button>
+
+            <div
+                class="chunks-list"
+                id="${chunkId}"
+                style="display:none"
+            >
+                ${items}
+            </div>
+        `;
+    }
+
+
+// ============================================================
+// FINAL AI MESSAGE
+// ============================================================
+
+    div.innerHTML = `
+
+        <div class="avatar ai">
+            🤖
+        </div>
+
+        <div class="bubble">
+
+            ${formatAnswer(data.answer || "No answer returned.")}
+
+            ${sourcesHtml}
+
+            ${chunksHtml}
+
+        </div>
+    `;
+
+
+    msgs.appendChild(div);
+
+    scrollBottom();
+}
+
+
+// ============================================================
+// ADD ERROR MESSAGE
+// ============================================================
+
+function addError(message) {
+
+    const msgs = document.getElementById("messages");
+
+    const div = document.createElement("div");
+
+    div.className = "msg";
+
+    div.innerHTML = `
+
+        <div class="avatar ai">
+            🤖
+        </div>
+
+        <div class="error-bubble">
+
+            ⚠️ ${escHtml(message)}
+
+        </div>
+    `;
+
+    msgs.appendChild(div);
+
+    scrollBottom();
+}
+
+
+// ============================================================
+// TOGGLE RETRIEVED CHUNKS
+// ============================================================
+
+function toggleChunks(id) {
+
+    const element = document.getElementById(id);
+
+    if (!element) {
+        return;
+    }
+
+    const button = element.previousElementSibling;
+
+
+    if (element.style.display === "none") {
+
+        element.style.display = "flex";
+
+        if (button) {
+            button.textContent = "▼ Hide retrieved chunks";
+        }
+
+    } else {
+
+        element.style.display = "none";
+
+        if (button) {
+            button.textContent = "▶ Show retrieved chunks";
+        }
+    }
+}
+
+
+// ============================================================
+// FORMAT ANSWER
+// ============================================================
+
+function formatAnswer(text) {
+
+    if (!text) {
+        return "";
+    }
+
+    return escHtml(String(text))
+
+        // Markdown bold
+        .replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        )
+
+        // New lines
+        .replace(
+            /\n\n/g,
+            "<br><br>"
+        )
+
+        .replace(
+            /\n/g,
+            "<br>"
+        );
+}
+
+
+// ============================================================
+// ESCAPE HTML
+// Prevent HTML injection
+// ============================================================
+
+function escHtml(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    const div = document.createElement("div");
+
+    div.textContent = String(value);
+
+    return div.innerHTML;
+}
+
+
+// ============================================================
+// MAIN SEND QUERY FUNCTION
+// ============================================================
+
+async function sendQuery() {
+
+    const input = document.getElementById("queryInput");
+
+    const sendBtn = document.getElementById("sendBtn");
+
+
+    if (!input) {
+
+        console.error("queryInput element not found");
+
+        return;
+    }
+
+
+    const question = input.value.trim();
+
+
+    // Don't send empty question
+    if (!question) {
+        return;
+    }
+
+
+    // Disable button
+    if (sendBtn) {
+        sendBtn.disabled = true;
+    }
+
+
+    // Clear input
+    input.value = "";
+
+    autoResize(input);
+
+
+    // Add user message
+    addUserMsg(question);
+
+
+    // Add thinking animation
+    addThinking();
+
+
+    try {
+
+        console.log("Sending request to:", API_URL);
+
+        console.log("Question:", question);
+
+
+        // ====================================================
+        // CALL FASTAPI
+        // ====================================================
+
+        const response = await fetch(API_URL, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                question: question
+            })
+
+        });
+
+
+        // Remove thinking indicator
+        removeThinking();
+
+
+        // ====================================================
+        // CHECK HTTP RESPONSE
+        // ====================================================
+
+        if (!response.ok) {
+
+            let errorMessage =
+                `API error ${response.status}`;
+
+            try {
+
+                const errorData = await response.json();
+
+                if (errorData.detail) {
+                    errorMessage += ` — ${errorData.detail}`;
+                }
+
+            } catch (e) {
+
+                // Response wasn't JSON
+            }
+
+
+            addError(errorMessage);
+
+            return;
+        }
+
+
+        // ====================================================
+        // CONVERT RESPONSE TO JSON
+        // ====================================================
+
+        const data = await response.json();
+
+
+        console.log("FastAPI response:", data);
+
+
+        // ====================================================
+        // VALIDATE RESPONSE
+        // ====================================================
+
+        if (!data) {
+
+            addError("Empty response received from FastAPI.");
+
+            return;
+        }
+
+
+        // ====================================================
+        // DISPLAY AI RESPONSE
+        // ====================================================
+
+        addAIMsg(data);
+
+
+    } catch (error) {
+
+        console.error("Fetch error:", error);
+
+
+        removeThinking();
+
+
+        addError(
+            "Cannot connect to FastAPI. " +
+            "Make sure your server is running on " +
+            "http://localhost:8002"
+        );
+
+
+    } finally {
+
+        // Enable button
+        if (sendBtn) {
+            sendBtn.disabled = false;
+        }
+
+
+        // Put cursor back into input
+        input.focus();
+    }
 }
