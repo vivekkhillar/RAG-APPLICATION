@@ -48,6 +48,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from generation.chain import RAGChain
 from config.logger import logger
@@ -58,6 +60,11 @@ app = FastAPI(
     description="FastAPI integrated with RAG Chain",
     version="1.0.0"
 )
+
+# Serve html, CSS, JS, images, etc.
+app.mount("/frontend", StaticFiles(directory="Frontend"), name="frontend")
+app.mount("/css",StaticFiles(directory="Frontend/css"),name="css")
+app.mount("/js",StaticFiles(directory="Frontend/js"),name="js")
 
 
 # =========================
@@ -97,6 +104,16 @@ class QueryRequest(BaseModel):
 class QueryResponse(BaseModel):
     answer: str
     sources: List[Source]
+
+# =========================
+# UI
+# =========================
+
+
+@app.get("/")
+async def serve_frontend():
+    return FileResponse("Frontend/index.html")
+    
 
 
 # =========================
