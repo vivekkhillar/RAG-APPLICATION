@@ -39,23 +39,23 @@ No data leaves your machine. No API keys. No cloud AI costs.
 │                                               (vectors) │
 └─────────────────────────────────────────────────────────┘
 
-┌─────────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────────────┐
 │                    QUERY (every request)                 │
 │                                                          │
 │  User Question                                           │
 │       │                                                  │
 │       ▼                                                  │
-│  mxbai-embed-large (embed query)                        │
+│  mxbai-embed-large (embed query)                         │
 │       │                                                  │
 │       ▼                                                  │
-│  ChromaDB (MMR semantic search → top-k chunks)          │
+│  ChromaDB (MMR semantic search → top-k chunks)           │
 │       │                                                  │
 │       ▼                                                  │
-│  Mistral / phi3:mini (generate answer from context)     │
+│  Mistral / phi3:mini (generate answer from context)      │
 │       │                                                  │
 │       ▼                                                  │
 │  Answer + Sources returned via FastAPI                   │
-└─────────────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────────┘
 ```
 
 ---
