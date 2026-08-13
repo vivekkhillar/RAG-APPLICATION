@@ -458,24 +458,160 @@ This project is structured for progressive enhancement across 3 RAG phases. Each
 - **.env** The project will run once you get the .env file configurations `Please raise a request for this`
 
 ```mermaid
-graph TD
-    ENV[.env] --> SET[settings.py]
-    SET --> ING[ingest.py orchestrator]
-    ING --> LOADER[loader.py]
-    
-    LOADER --> SPLIT[splitter.py]
-    SPLIT --> IMG[image_handler.py]
-    
-    SET -.-> EMB
-    LOADER --> EMB[embedder.py]
-    SPLIT --> EMB
-    IMG --> EMB
-    
-    EMB --> STORE[store.py]
-    STORE --> CHROMA[(Chroma DB)]
-    
-    style CHROMA fill:#f9f,stroke:#333,stroke-width:2px
+flowchart TD
+    subgraph INGESTION["🔄 Ingestion Pipeline — run once"]
+        A([PDF Document\n146 pages]) --> B[PyMuPDF\nloader.py]
+        B --> C[Text per page]
+        B --> D[Images per page]
+        C --> E[RecursiveCharacterTextSplitter\nsplitter.py\nchunk_size=400, overlap=80]
+        D --> F[EasyOCR\nimage_handler.py\nconfidence retry + Pillow]
+        D --> G[LLaVA 7B\nvia Ollama\nimage description]
+        F --> H[OCR Text]
+        G --> I[Visual Description]
+        H --> J[combine\ndocument_builder]
+        I --> J
+        E --> K[Text Chunks\nList of Document]
+        J --> L[Image Chunks\nList of Document]
+        K --> M[Merge all chunks]
+        L --> M
+        M --> N[mxbai-embed-large\nembedder.py\nOllamaEmbeddings]
+        N --> O[(ChromaDB\nvector store)]
+    end
+ 
+    subgraph QUERY["🔍 Query Pipeline — every request"]
+        P([User Question\nPOST /query]) --> Q[mxbai-embed-large\nembed query]
+        Q --> R[ChromaDB\nMMR Semantic Search\ntop-k chunks]
+        O --> R
+        R --> S[Retrieved Chunks\ntext + image descriptions]
+        S --> T[ChatPromptTemplate\nprompt.py\ncontext + question]
+        T --> U[phi3:mini / Mistral\nvia Ollama\ngenerate answer]
+        U --> V([Answer + Sources\nJSON Response])
+    end
+ 
+    subgraph STACK["🛠️ Tech Stack"]
+        W[LangChain] 
+        X[FastAPI]
+        Y[ChromaDB]
+        Z[Ollama]
+    end
+ 
+    style INGESTION fill:#1A1D27,stroke:#4F6EF7,color:#E8EAF6
+    style QUERY fill:#1A1D27,stroke:#34C97A,color:#E8EAF6
+    style STACK fill:#1A1D27,stroke:#F5A623,color:#E8EAF6
+    style A fill:#2A3A8F,stroke:#4F6EF7,color:#E8EAF6
+    style O fill:#085041,stroke:#34C97A,color:#E8EAF6
+    style P fill:#712B13,stroke:#F08080,color:#E8EAF6
+    style V fill:#085041,stroke:#34C97A,color:#E8EAF6
+    style U fill:#633806,stroke:#F5A623,color:#E8EAF6
+    style N fill:#633806,stroke:#F5A623,color:#E8EAF6
+    style G fill:#533A89,stroke:#9F77DD,color:#E8EAF6
 ```
-
-
-
+ 
+---
+ 
+```mermaid
+flowchart LR
+    subgraph LOCAL["💻 Local Development"]
+        A[Python Code\ndirect run] 
+        B[(ChromaDB\nlocalhost:8001)]
+        C[Ollama\nlocalhost:11434]
+        A -->|stores vectors| B
+        A -->|calls models| C
+    end
+ 
+    subgraph DOCKER["🐳 Docker Compose"]
+        D[rag-api\ncontainer :8000]
+        E[(chromadb\ncontainer :8000)]
+        F[ollama\ncontainer :11434]
+        G[nginx frontend\ncontainer :80]
+        D -->|http://chromadb:8000| E
+        D -->|http://ollama:11434| F
+    end
+ 
+    subgraph PORTS["🌐 Exposed Ports"]
+        H[localhost:8000\nFastAPI]
+        I[localhost:8001\nChromaDB]
+        J[localhost:11434\nOllama]
+        K[localhost:8002\nChat UI]
+    end
+ 
+    DOCKER --> PORTS
+ 
+    style LOCAL fill:#1A1D27,stroke:#4F6EF7,color:#E8EAF6
+    style DOCKER fill:#1A1D27,stroke:#34C97A,color:#E8EAF6
+    style PORTS fill:#1A1D27,stroke:#F5A623,color:#E8EAF6
+```
+ 
+---
+ 
+```mermaid
+flowchart TD
+    subgraph IMAGE["🖼️ Image Processing Flow"]
+        A([Raw Image\nextracted from PDF]) --> B{Size check\n< 50x50px?}
+        B -->|yes skip| Z([Skip — decorative])
+        B -->|no continue| C[EasyOCR\nraw image]
+        C --> D{All confidence\n> 0.3?}
+        D -->|yes| E([Return OCR text ✓])
+        D -->|no| F[Pillow Level 1\nGrayscale + Contrast 1.5x]
+        F --> G[EasyOCR retry]
+        G --> H{All confidence\n> 0.3?}
+        H -->|yes| I([Return text ✓])
+        H -->|no| J[Pillow Level 2\n+ Sharpen + Upscale 2x]
+        J --> K[EasyOCR retry]
+        K --> L{All confidence\n> 0.3?}
+        L -->|yes| M([Return text ✓])
+        L -->|no| N[Pillow Level 3\n+ Binarize + Denoise]
+        N --> O[EasyOCR final]
+        O --> P([Return best result])
+    end
+ 
+    style IMAGE fill:#1A1D27,stroke:#9F77DD,color:#E8EAF6
+    style A fill:#2A3A8F,stroke:#4F6EF7,color:#E8EAF6
+    style Z fill:#444441,stroke:#888780,color:#B4B2A9
+    style E fill:#085041,stroke:#34C97A,color:#E8EAF6
+    style I fill:#085041,stroke:#34C97A,color:#E8EAF6
+    style M fill:#085041,stroke:#34C97A,color:#E8EAF6
+    style P fill:#633806,stroke:#F5A623,color:#E8EAF6
+```
+ 
+---
+ 
+```mermaid
+flowchart LR
+    subgraph PHASE1["✅ Phase 1 — Classic RAG"]
+        A[LangChain\nLinear pipeline]
+        B[PDF ingestion\ntext + images]
+        C[FastAPI\nquery endpoint]
+        D[Docker\nlocal deploy]
+    end
+ 
+    subgraph PHASE2["🔄 Phase 2 — Agentic RAG"]
+        E[LangGraph\nDecision loop]
+        F[Query rewriting\nself correction]
+        G[Relevance grading\nretry if poor]
+    end
+ 
+    subgraph PHASE3["🤖 Phase 3 — Multi Agent RAG"]
+        H[Supervisor agent\norchestrator]
+        I[Retriever agent]
+        J[Grader agent]
+        K[Generator agent]
+        L[Web fallback\nagent]
+    end
+ 
+    subgraph AWS["☁️ AWS Deployment"]
+        M[EC2 instance]
+        N[ECR registry]
+        O[EBS volume\nmodels + vectors]
+    end
+ 
+    PHASE1 -->|upgrade| PHASE2
+    PHASE2 -->|upgrade| PHASE3
+    PHASE3 -->|deploy| AWS
+ 
+    style PHASE1 fill:#085041,stroke:#34C97A,color:#E8EAF6
+    style PHASE2 fill:#1A2A4F,stroke:#4F6EF7,color:#E8EAF6
+    style PHASE3 fill:#2A1A4F,stroke:#9F77DD,color:#E8EAF6
+    style AWS fill:#3A2A0F,stroke:#F5A623,color:#E8EAF6
+```
+```
