@@ -463,6 +463,7 @@ flowchart TD
         A([PDF Document\n146 pages]) --> B[PyMuPDF\nloader.py]
         B --> C[Text per page]
         B --> D[Images per page]
+        B --> T[Tables per page\npage.find_tables]
         C --> E[RecursiveCharacterTextSplitter\nsplitter.py\nchunk_size=400, overlap=80]
         D --> F[EasyOCR\nimage_handler.py\nconfidence retry + Pillow]
         D --> G[LLaVA 7B\nvia Ollama\nimage description]
@@ -470,31 +471,34 @@ flowchart TD
         G --> I[Visual Description]
         H --> J[combine\ndocument_builder]
         I --> J
+        T --> TB[table_handler.py\nto_markdown format]
         E --> K[Text Chunks\nList of Document]
         J --> L[Image Chunks\nList of Document]
+        TB --> TL[Table Chunks\nList of Document]
         K --> M[Merge all chunks]
         L --> M
+        TL --> M
         M --> N[mxbai-embed-large\nembedder.py\nOllamaEmbeddings]
         N --> O[(ChromaDB\nvector store)]
     end
-
+ 
     subgraph QUERY["🔍 Query Pipeline — every request"]
         P([User Question\nPOST /query]) --> Q[mxbai-embed-large\nembed query]
         Q --> R[ChromaDB\nMMR Semantic Search\ntop-k chunks]
         O --> R
-        R --> S[Retrieved Chunks\ntext + image descriptions]
-        S --> T[ChatPromptTemplate\nprompt.py\ncontext + question]
-        T --> U[phi3:mini / Mistral\nvia Ollama\ngenerate answer]
+        R --> S[Retrieved Chunks\ntext + image + table]
+        S --> TT[ChatPromptTemplate\nprompt.py\ncontext + question]
+        TT --> U[phi3:mini / Mistral\nvia Ollama\ngenerate answer]
         U --> V([Answer + Sources\nJSON Response])
     end
-
+ 
     subgraph STACK["🛠️ Tech Stack"]
         W[LangChain]
         X[FastAPI]
         Y[ChromaDB]
         Z[Ollama]
     end
-
+ 
     style INGESTION fill:#ffffff,stroke:#4F6EF7,color:#111111
     style QUERY fill:#ffffff,stroke:#34C97A,color:#111111
     style STACK fill:#ffffff,stroke:#F5A623,color:#111111
@@ -505,10 +509,13 @@ flowchart TD
     style U fill:#633806,stroke:#F5A623,color:#E8EAF6
     style N fill:#633806,stroke:#F5A623,color:#E8EAF6
     style G fill:#533A89,stroke:#9F77DD,color:#E8EAF6
+    style TB fill:#085041,stroke:#34C97A,color:#E8EAF6
+    style TL fill:#085041,stroke:#34C97A,color:#E8EAF6
+    style T fill:#085041,stroke:#34C97A,color:#E8EAF6
 ```
-
+ 
 ---
-
+ 
 ```mermaid
 flowchart LR
     subgraph LOCAL["💻 Local Development"]
@@ -518,7 +525,7 @@ flowchart LR
         A -->|stores vectors| B
         A -->|calls models| C
     end
-
+ 
     subgraph DOCKER["🐳 Docker Compose"]
         D[rag-api\ncontainer :8000]
         E[(chromadb\ncontainer :8000)]
@@ -527,23 +534,23 @@ flowchart LR
         D -->|http://chromadb:8000| E
         D -->|http://ollama:11434| F
     end
-
+ 
     subgraph PORTS["🌐 Exposed Ports"]
         H[localhost:8000\nFastAPI]
         I[localhost:8001\nChromaDB]
         J[localhost:11434\nOllama]
         K[localhost:8002\nChat UI]
     end
-
+ 
     DOCKER --> PORTS
-
+ 
     style LOCAL fill:#ffffff,stroke:#4F6EF7,color:#111111
     style DOCKER fill:#ffffff,stroke:#34C97A,color:#111111
     style PORTS fill:#ffffff,stroke:#F5A623,color:#111111
 ```
-
+ 
 ---
-
+ 
 ```mermaid
 flowchart TD
     subgraph IMAGE["🖼️ Image Processing Flow"]
@@ -564,7 +571,7 @@ flowchart TD
         N --> O[EasyOCR final]
         O --> P([Return best result])
     end
-
+ 
     style IMAGE fill:#ffffff,stroke:#9F77DD,color:#111111
     style A fill:#2A3A8F,stroke:#4F6EF7,color:#E8EAF6
     style Z fill:#888780,stroke:#5F5E5A,color:#ffffff
@@ -573,24 +580,46 @@ flowchart TD
     style M fill:#085041,stroke:#34C97A,color:#E8EAF6
     style P fill:#633806,stroke:#F5A623,color:#E8EAF6
 ```
-
+ 
 ---
-
+ 
+```mermaid
+flowchart TD
+    subgraph TABLE["📊 Table Processing Flow"]
+        A([Page from PDF]) --> B[PyMuPDF\npage.find_tables]
+        B --> C{Tables\ndetected?}
+        C -->|no| Z([Skip page])
+        C -->|yes| D[table.to_markdown\npreserve rows + columns]
+        D --> E{Markdown\nvalid?}
+        E -->|no| Z
+        E -->|yes| F[document_builder\ntable_handler.py]
+        F --> G([Document\npage_content = markdown\ntype = table])
+    end
+ 
+    style TABLE fill:#ffffff,stroke:#34C97A,color:#111111
+    style A fill:#2A3A8F,stroke:#4F6EF7,color:#E8EAF6
+    style Z fill:#888780,stroke:#5F5E5A,color:#ffffff
+    style G fill:#085041,stroke:#34C97A,color:#E8EAF6
+    style D fill:#085041,stroke:#34C97A,color:#E8EAF6
+```
+ 
+---
+ 
 ```mermaid
 flowchart LR
     subgraph PHASE1["✅ Phase 1 — Classic RAG"]
         A[LangChain\nLinear pipeline]
-        B[PDF ingestion\ntext + images]
+        B[PDF ingestion\ntext + images + tables]
         C[FastAPI\nquery endpoint]
         D[Docker\nlocal deploy]
     end
-
+ 
     subgraph PHASE2["🔄 Phase 2 — Agentic RAG"]
         E[LangGraph\nDecision loop]
         F[Query rewriting\nself correction]
         G[Relevance grading\nretry if poor]
     end
-
+ 
     subgraph PHASE3["🤖 Phase 3 — Multi Agent RAG"]
         H[Supervisor agent\norchestrator]
         I[Retriever agent]
@@ -598,17 +627,17 @@ flowchart LR
         K[Generator agent]
         L[Web fallback\nagent]
     end
-
+ 
     subgraph AWS["☁️ AWS Deployment"]
         M[EC2 instance]
         N[ECR registry]
         O[EBS volume\nmodels + vectors]
     end
-
+ 
     PHASE1 -->|upgrade| PHASE2
     PHASE2 -->|upgrade| PHASE3
     PHASE3 -->|deploy| AWS
-
+ 
     style PHASE1 fill:#ffffff,stroke:#34C97A,color:#111111
     style PHASE2 fill:#ffffff,stroke:#4F6EF7,color:#111111
     style PHASE3 fill:#ffffff,stroke:#9F77DD,color:#111111
