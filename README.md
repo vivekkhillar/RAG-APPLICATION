@@ -32,7 +32,7 @@ No data leaves your machine. No API keys. No cloud AI costs.
 │                    INGESTION (run once)                 │
 │                                                         │
 │  PDF ──► PyMuPDF ──► Text pages ──► Splitter ─────────┐ │
-│                  ──► Tables pages ──► Splitter ───────┤ │ 
+│                 └──► Tables pages ──► Splitter ───────┤ │ 
 │                 └──► Images ──► OCR + LLaVA ──────────┤ │
 │                                                       ▼ │
 │                                               ChromaDB  │
@@ -125,6 +125,7 @@ CLASSIC_RAG/
 │   ├── splitter.py             # DocumentSplitter — RecursiveCharacterTextSplitter
 │   ├── embedder.py             # EmbeddingProvider — mxbai-embed-large via Ollama
 │   └── image_handler.py        # ImageHandler — OCR + LLaVA image processing
+│   └── table_handler.py        # TableHandler — Table fetch and processing
 │
 ├── retrieval/
 │   └── retriever.py            # RetrieverBuilder — ChromaDB MMR retriever
