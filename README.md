@@ -1,4 +1,4 @@
-# 📄 RIL Document QA — Classic RAG System
+# 📄 RIL Document — Classic RAG System
 
 > An intelligent document Question & Answer system built on Retrieval-Augmented Generation (RAG) architecture. Ask anything about the Reliance Industries Limited Integrated Annual Report 2024-25 and get accurate, source-cited answers powered entirely by free, locally hosted AI models.
 
