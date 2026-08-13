@@ -29,13 +29,14 @@ No data leaves your machine. No API keys. No cloud AI costs.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    INGESTION (run once)                  │
-│                                                          │
-│  PDF ──► PyMuPDF ──► Text pages ──► Splitter ──────────┐ │
-│                  └──► Images ──► OCR + LLaVA ──────────┤ │
-│                                                         ▼ │
-│                                               ChromaDB     │
-│                                               (vectors)    │
+│                    INGESTION (run once)                 │
+│                                                         │
+│  PDF ──► PyMuPDF ──► Text pages ──► Splitter ─────────┐ │
+│                  ──► Tables pages ──► Splitter ───────┤ │ 
+│                 └──► Images ──► OCR + LLaVA ──────────┤ │
+│                                                       ▼ │
+│                                               ChromaDB  │
+│                                               (vectors) │
 └─────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────┐
