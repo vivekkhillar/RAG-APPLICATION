@@ -165,7 +165,9 @@ All config lives in `.env`. Key settings:
 # Models (via Ollama)
 OLLAMA_URL=http://localhost:11434
 OLLAMA_MODEL=phi3:mini
-VISION_MODEL=llava
+OLLAMA_MODEL_TEMPERATURE=0.4 
+VISION_MODEL=moondream
+VISION_MODEL_TEMPERATURE=0.1
 EMBEDDING_MODEL=mxbai-embed-large
 
 # ChromaDB
@@ -174,17 +176,24 @@ CHROMA_PORT=8001
 CHROMA_COLLECTION=rag_docs
 
 # Chunking
-CHUNK_SIZE=400
+CHUNK_SIZE=700
 CHUNK_OVERLAP=80
-RETRIEVER_K=4
+RETRIEVER_K=2
 
 # Document
 DOCS_PATH=data/docs/RIL-Integrated-Annual-Report-2024-25.pdf
 PDF_NAME=RIL-Integrated-Annual-Report-2024-25
+IMAGES_PATH=data/images
+LOGS_PATH=data/logs
+PREPROCESSED_IMAGE_TEMP_PATH=data/prepocessimages
 
 # OCR
 ocr_texfinding_confidence_level=0.3
 MAXIMUM_IMAGE_PROCESS_level=3
+
+# LOGGER
+ENVIRONMENT=DEV
+LOG_LEVEL=DEBUG
 ```
 
 ---
