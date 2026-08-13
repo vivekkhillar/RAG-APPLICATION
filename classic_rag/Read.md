@@ -1,4 +1,4 @@
-# 📄 RIL Document QA — Classic RAG System
+# 📄 RIL Document — Classic RAG System
 
 > An intelligent document Question & Answer system built on Retrieval-Augmented Generation (RAG) architecture. Ask anything about the Reliance Industries Limited Integrated Annual Report 2024-25 and get accurate, source-cited answers powered entirely by free, locally hosted AI models.
 
@@ -29,32 +29,33 @@ No data leaves your machine. No API keys. No cloud AI costs.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    INGESTION (run once)                  │
-│                                                          │
-│  PDF ──► PyMuPDF ──► Text pages ──► Splitter ──────────┐ │
-│                  └──► Images ──► OCR + LLaVA ──────────┤ │
-│                                                         ▼ │
-│                                               ChromaDB     │
-│                                               (vectors)    │
+│                    INGESTION (run once)                 │
+│                                                         │
+│  PDF ──► PyMuPDF ──► Text pages ──► Splitter ─────────┐ │
+│                 └──► Tables pages ──► Splitter ───────┤ │ 
+│                 └──► Images ──► OCR + LLaVA ──────────┤ │
+│                                                       ▼ │
+│                                               ChromaDB  │
+│                                               (vectors) │
 └─────────────────────────────────────────────────────────┘
 
-┌─────────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────────────┐
 │                    QUERY (every request)                 │
 │                                                          │
 │  User Question                                           │
 │       │                                                  │
 │       ▼                                                  │
-│  mxbai-embed-large (embed query)                        │
+│  mxbai-embed-large (embed query)                         │
 │       │                                                  │
 │       ▼                                                  │
-│  ChromaDB (MMR semantic search → top-k chunks)          │
+│  ChromaDB (MMR semantic search → top-k chunks)           │
 │       │                                                  │
 │       ▼                                                  │
-│  Mistral / phi3:mini (generate answer from context)     │
+│  Mistral / phi3:mini (generate answer from context)      │
 │       │                                                  │
 │       ▼                                                  │
 │  Answer + Sources returned via FastAPI                   │
-└─────────────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -124,6 +125,7 @@ CLASSIC_RAG/
 │   ├── splitter.py             # DocumentSplitter — RecursiveCharacterTextSplitter
 │   ├── embedder.py             # EmbeddingProvider — mxbai-embed-large via Ollama
 │   └── image_handler.py        # ImageHandler — OCR + LLaVA image processing
+│   └── table_handler.py        # TableHandler — Table fetch and processing
 │
 ├── retrieval/
 │   └── retriever.py            # RetrieverBuilder — ChromaDB MMR retriever
@@ -455,8 +457,8 @@ This project is structured for progressive enhancement across 3 RAG phases. Each
 - **All models are free** — no OpenAI, no Anthropic, no cloud costs
 - **ChromaDB data persists** via Docker volume `chroma_data`
 - **Ollama model data persists** via Docker volume `ollama_data`
-- **.env** The project will run once you get the .env file configurations `Please raise a request for this`
-
+- **.env** The project will run once you configure .env file in root levle
+- 
 ```mermaid
 flowchart TD
     subgraph INGESTION["🔄 Ingestion Pipeline — run once"]
