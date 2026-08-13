@@ -456,8 +456,8 @@ This project is structured for progressive enhancement across 3 RAG phases. Each
 - **All models are free** — no OpenAI, no Anthropic, no cloud costs
 - **ChromaDB data persists** via Docker volume `chroma_data`
 - **Ollama model data persists** via Docker volume `ollama_data`
-- **.env** The project will run once you get the .env file configurations `Please raise a request for this`
-
+- **.env** The project will run once you configure .env file in root levle
+- 
 ```mermaid
 flowchart TD
     subgraph INGESTION["🔄 Ingestion Pipeline — run once"]
