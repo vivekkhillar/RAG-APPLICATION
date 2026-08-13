@@ -477,7 +477,7 @@ flowchart TD
         M --> N[mxbai-embed-large\nembedder.py\nOllamaEmbeddings]
         N --> O[(ChromaDB\nvector store)]
     end
- 
+
     subgraph QUERY["🔍 Query Pipeline — every request"]
         P([User Question\nPOST /query]) --> Q[mxbai-embed-large\nembed query]
         Q --> R[ChromaDB\nMMR Semantic Search\ntop-k chunks]
@@ -487,17 +487,17 @@ flowchart TD
         T --> U[phi3:mini / Mistral\nvia Ollama\ngenerate answer]
         U --> V([Answer + Sources\nJSON Response])
     end
- 
+
     subgraph STACK["🛠️ Tech Stack"]
-        W[LangChain] 
+        W[LangChain]
         X[FastAPI]
         Y[ChromaDB]
         Z[Ollama]
     end
- 
-    style INGESTION fill:#1A1D27,stroke:#4F6EF7,color:#E8EAF6
-    style QUERY fill:#1A1D27,stroke:#34C97A,color:#E8EAF6
-    style STACK fill:#1A1D27,stroke:#F5A623,color:#E8EAF6
+
+    style INGESTION fill:#ffffff,stroke:#4F6EF7,color:#111111
+    style QUERY fill:#ffffff,stroke:#34C97A,color:#111111
+    style STACK fill:#ffffff,stroke:#F5A623,color:#111111
     style A fill:#2A3A8F,stroke:#4F6EF7,color:#E8EAF6
     style O fill:#085041,stroke:#34C97A,color:#E8EAF6
     style P fill:#712B13,stroke:#F08080,color:#E8EAF6
@@ -506,19 +506,19 @@ flowchart TD
     style N fill:#633806,stroke:#F5A623,color:#E8EAF6
     style G fill:#533A89,stroke:#9F77DD,color:#E8EAF6
 ```
- 
+
 ---
- 
+
 ```mermaid
 flowchart LR
     subgraph LOCAL["💻 Local Development"]
-        A[Python Code\ndirect run] 
+        A[Python Code\ndirect run]
         B[(ChromaDB\nlocalhost:8001)]
         C[Ollama\nlocalhost:11434]
         A -->|stores vectors| B
         A -->|calls models| C
     end
- 
+
     subgraph DOCKER["🐳 Docker Compose"]
         D[rag-api\ncontainer :8000]
         E[(chromadb\ncontainer :8000)]
@@ -527,23 +527,23 @@ flowchart LR
         D -->|http://chromadb:8000| E
         D -->|http://ollama:11434| F
     end
- 
+
     subgraph PORTS["🌐 Exposed Ports"]
         H[localhost:8000\nFastAPI]
         I[localhost:8001\nChromaDB]
         J[localhost:11434\nOllama]
         K[localhost:8002\nChat UI]
     end
- 
+
     DOCKER --> PORTS
- 
-    style LOCAL fill:#1A1D27,stroke:#4F6EF7,color:#E8EAF6
-    style DOCKER fill:#1A1D27,stroke:#34C97A,color:#E8EAF6
-    style PORTS fill:#1A1D27,stroke:#F5A623,color:#E8EAF6
+
+    style LOCAL fill:#ffffff,stroke:#4F6EF7,color:#111111
+    style DOCKER fill:#ffffff,stroke:#34C97A,color:#111111
+    style PORTS fill:#ffffff,stroke:#F5A623,color:#111111
 ```
- 
+
 ---
- 
+
 ```mermaid
 flowchart TD
     subgraph IMAGE["🖼️ Image Processing Flow"]
@@ -564,18 +564,18 @@ flowchart TD
         N --> O[EasyOCR final]
         O --> P([Return best result])
     end
- 
-    style IMAGE fill:#1A1D27,stroke:#9F77DD,color:#E8EAF6
+
+    style IMAGE fill:#ffffff,stroke:#9F77DD,color:#111111
     style A fill:#2A3A8F,stroke:#4F6EF7,color:#E8EAF6
-    style Z fill:#444441,stroke:#888780,color:#B4B2A9
+    style Z fill:#888780,stroke:#5F5E5A,color:#ffffff
     style E fill:#085041,stroke:#34C97A,color:#E8EAF6
     style I fill:#085041,stroke:#34C97A,color:#E8EAF6
     style M fill:#085041,stroke:#34C97A,color:#E8EAF6
     style P fill:#633806,stroke:#F5A623,color:#E8EAF6
 ```
- 
+
 ---
- 
+
 ```mermaid
 flowchart LR
     subgraph PHASE1["✅ Phase 1 — Classic RAG"]
@@ -584,13 +584,13 @@ flowchart LR
         C[FastAPI\nquery endpoint]
         D[Docker\nlocal deploy]
     end
- 
+
     subgraph PHASE2["🔄 Phase 2 — Agentic RAG"]
         E[LangGraph\nDecision loop]
         F[Query rewriting\nself correction]
         G[Relevance grading\nretry if poor]
     end
- 
+
     subgraph PHASE3["🤖 Phase 3 — Multi Agent RAG"]
         H[Supervisor agent\norchestrator]
         I[Retriever agent]
@@ -598,20 +598,19 @@ flowchart LR
         K[Generator agent]
         L[Web fallback\nagent]
     end
- 
+
     subgraph AWS["☁️ AWS Deployment"]
         M[EC2 instance]
         N[ECR registry]
         O[EBS volume\nmodels + vectors]
     end
- 
+
     PHASE1 -->|upgrade| PHASE2
     PHASE2 -->|upgrade| PHASE3
     PHASE3 -->|deploy| AWS
- 
-    style PHASE1 fill:#085041,stroke:#34C97A,color:#E8EAF6
-    style PHASE2 fill:#1A2A4F,stroke:#4F6EF7,color:#E8EAF6
-    style PHASE3 fill:#2A1A4F,stroke:#9F77DD,color:#E8EAF6
-    style AWS fill:#3A2A0F,stroke:#F5A623,color:#E8EAF6
-```
+
+    style PHASE1 fill:#ffffff,stroke:#34C97A,color:#111111
+    style PHASE2 fill:#ffffff,stroke:#4F6EF7,color:#111111
+    style PHASE3 fill:#ffffff,stroke:#9F77DD,color:#111111
+    style AWS fill:#ffffff,stroke:#F5A623,color:#111111
 ```
